@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>JSON</h1>
+    <h2>javascript Object Notation</h2>
+    <ul id="users-container">
+    
+    </ul>
+    <input id ="title" type="text" placeholder="title">
+    <br>
+    <input id="bodyContent" type="text" placeholder="post er main jinish">
+    <br>
+    <button id = "submit" >Submit</button>
+
+
+
+    <script>
+        const user = {
+            id : 245,
+            name : "Imran",
+            // another object
+            lover : {
+                name : "Khan",
+                favFood : "pizza"
+            },
+            friendsAge : [12, 45, 56],
+            friends : ["Kamal", "Jamal", "Salam"]
+        };
+        // object to JSON convert using stringify
+        const userJSON = JSON.stringify(user);
+        console.log(userJSON);
+
+        // convert JSON data into object
+        const userFromJSON = JSON.parse(userJSON);
+        console.log(userFromJSON);
+
+            // load data from another server using JSON
+            fetch('https://jsonplaceholder.typicode.com/users')
+            .then(response => response.json())
+            .then(json => displayUser(json))
+            .catch(error => console.log(error));  // for error msg error function
+
+            function displayUser(users){
+                console.log("users", users);
+                const userName = users.map(user=>user.username);
+                console.log(userName);
+                // ul a li set korbo
+                
+                const ul = document.getElementById("users-container"); //ul je dhore fellam
+                for (let i = 0; i <userName.length; i++){
+                    const username = userName[i];
+                    const li = document.createElement("li");
+                    li.innerText = username;
+                    ul.appendChild(li); // li ke ul er baccha banaya dilam
+
+
+                }
+            }
+
+
+            // POST
+            document.getElementById("submit").addEventListener("click",function(){
+                const title = document.getElementById("title").value;
+                const bodyContent = document.getElementById("bodyContent").value;
+                const post ={title : title, body : bodyContent};
+                nowPostToServer(post);
+                
+            })
+
+            // send data to the server
+           function nowPostToServer(postInfo){
+
+            // const postInfo = { title: 'foooooooo', body: 'barrrrrrrrr', userId: 1}
+            fetch('https://jsonplaceholder.typicode.com/posts', {
+                method: 'POST',  // kon method a data pathacho
+                // ja pathabo ta body te thakbe
+                body: JSON.stringify(postInfo),  // ki ki data pathacho sob ekhane
+                // header a bole dibo kon format a pathabo 
+                headers: {
+                "Content-type": "application/json; charset=UTF-8"  // kon format a data pathacho-> ekhane bole disi json a   
+                }
+            })
+            .then(response => response.json())
+            .then(data => console.log(data));
+
+           }
+
+                // // Output
+                // {
+                // id: 101,
+                // title: 'foo',
+                // body: 'bar',
+                // userId: 1
+                // }
+
+    </script>
+    
+</body>
+</html>
